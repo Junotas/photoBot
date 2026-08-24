@@ -9,9 +9,12 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Component
 public class PhotoListener extends ListenerAdapter {
+
+  private static final Pattern TAG_SUFFIX = Pattern.compile("\\s*[\\[(].*$");
 
   private final CurrentWeekService currentWeekService;
   private final PhotoStorageService photoStorageService;
@@ -40,11 +43,16 @@ public class PhotoListener extends ListenerAdapter {
       return;
     }
 
-    String author =
+    String rawName =
         event.getMember() != null
             ? event.getMember().getEffectiveName()
             : event.getAuthor().getName();
+    String author = cleanDisplayName(rawName);
 
     photoStorageService.saveAll(currentWeekService.get(), author, attachments);
+  }
+
+  private String cleanDisplayName(String rawName) {
+    return TAG_SUFFIX.matcher(rawName).replaceFirst("").trim();
   }
 }
