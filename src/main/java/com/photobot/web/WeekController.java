@@ -1,6 +1,8 @@
 package com.photobot.web;
 
 import com.photobot.service.CurrentWeekService;
+import com.photobot.web.dto.CurrentWeekResponse;
+import com.photobot.web.dto.WeekUpdateRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,8 +29,4 @@ public class WeekController {
     currentWeekService.set(request.weekId());
     return new CurrentWeekResponse(currentWeekService.get());
   }
-
-  public record WeekUpdateRequest(String weekId) {}
-
-  public record CurrentWeekResponse(String weekId) {}
 }
