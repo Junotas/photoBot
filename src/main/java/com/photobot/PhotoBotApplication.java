@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @EnableConfigurationProperties(AppProperties.class)
 public class PhotoBotApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(PhotoBotApplication.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(PhotoBotApplication.class, args);
+  }
 }

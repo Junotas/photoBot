@@ -11,24 +11,24 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/week")
 public class WeekController {
 
-    private final CurrentWeekService currentWeekService;
+  private final CurrentWeekService currentWeekService;
 
-    public WeekController(CurrentWeekService currentWeekService) {
-        this.currentWeekService = currentWeekService;
-    }
+  public WeekController(CurrentWeekService currentWeekService) {
+    this.currentWeekService = currentWeekService;
+  }
 
-    @GetMapping
-    public CurrentWeekResponse getCurrentWeek() {
-        return new CurrentWeekResponse(currentWeekService.get());
-    }
+  @GetMapping
+  public CurrentWeekResponse getCurrentWeek() {
+    return new CurrentWeekResponse(currentWeekService.get());
+  }
 
-    @PutMapping
-    public CurrentWeekResponse setCurrentWeek(@RequestBody WeekUpdateRequest request) {
-        currentWeekService.set(request.weekId());
-        return new CurrentWeekResponse(currentWeekService.get());
-    }
+  @PutMapping
+  public CurrentWeekResponse setCurrentWeek(@RequestBody WeekUpdateRequest request) {
+    currentWeekService.set(request.weekId());
+    return new CurrentWeekResponse(currentWeekService.get());
+  }
 
-    public record WeekUpdateRequest(String weekId) {}
+  public record WeekUpdateRequest(String weekId) {}
 
-    public record CurrentWeekResponse(String weekId) {}
+  public record CurrentWeekResponse(String weekId) {}
 }
