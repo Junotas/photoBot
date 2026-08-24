@@ -24,7 +24,7 @@ public class PhotoStorageService {
 
   private static final Logger log = LoggerFactory.getLogger(PhotoStorageService.class);
 
-  private static final Set<String> ALLOWED_EXTENSIONS = Set.of("png", "jpg", "jpeg", "gif", "webp");
+  private static final Set<String> ALLOWED_EXTENSIONS = Set.of("png", "jpg", "jpeg" , "webp");
   private static final Pattern UNSAFE_FILENAME_CHARS = Pattern.compile("[^a-zA-Z0-9_'-]");
 
   private final ExecutorService downloadExecutor = Executors.newVirtualThreadPerTaskExecutor();
