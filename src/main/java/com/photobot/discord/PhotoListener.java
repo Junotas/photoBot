@@ -14,6 +14,9 @@ import java.util.regex.Pattern;
 @Component
 public class PhotoListener extends ListenerAdapter {
 
+  // Matches a bracketed/parenthesized tag people append to their display
+  // name, e.g. "Nyek [calhub|ghbgDir]" -> "Nyek". Cuts at the first '['
+  // or '(' and drops everything after it, including the space before it.
   private static final Pattern TAG_SUFFIX = Pattern.compile("\\s*[\\[(].*$");
 
   private final CurrentWeekService currentWeekService;
@@ -52,7 +55,7 @@ public class PhotoListener extends ListenerAdapter {
     photoStorageService.saveAll(currentWeekService.get(), author, attachments);
   }
 
-  private String cleanDisplayName(String rawName) {
+  String cleanDisplayName(String rawName) {
     return TAG_SUFFIX.matcher(rawName).replaceFirst("").trim();
   }
 }
