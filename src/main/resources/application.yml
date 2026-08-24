@@ -1,0 +1,13 @@
+app:
+  discord-token: ${DISCORD_TOKEN}
+  channel-id: ${DISCORD_CHANNEL_ID}
+  photos-root: ${PHOTOS_ROOT:./public/photos}
+  current-week: ${CURRENT_WEEK:2026-w35}
+
+server:
+  port: ${PORT:8080}
+
+logging:
+  level:
+    root: INFO
+    com.photobot: DEBUG
