@@ -3,6 +3,7 @@ app:
   channel-id: ${DISCORD_CHANNEL_ID}
   photos-root: ${PHOTOS_ROOT:./public/photos}
   current-week: ${CURRENT_WEEK:2026-w35}
+  state-file: ${STATE_FILE:/data/last-message-id.txt}
 
 server:
   port: ${PORT:8080}
