@@ -6,4 +6,4 @@ import java.nio.file.Path;
 
 @ConfigurationProperties(prefix = "app")
 public record AppProperties(
-    String discordToken, long channelId, Path photosRoot, String currentWeek) {}
+    String discordToken, long channelId, Path photosRoot, String currentWeek, Path stateFile) {}
