@@ -24,12 +24,9 @@ public class PhotoStorageService {
 
   private static final Logger log = LoggerFactory.getLogger(PhotoStorageService.class);
 
-  private static final Set<String> ALLOWED_EXTENSIONS = Set.of("png", "jpg", "jpeg", "gif", "webp");
+  private static final Set<String> ALLOWED_EXTENSIONS = Set.of("png", "jpg", "jpeg", "webp");
   private static final Pattern UNSAFE_FILENAME_CHARS = Pattern.compile("[^a-zA-Z0-9_'-]");
 
-  // Java 21 virtual threads: one per download task, no pool sizing to tune.
-  // Fine here since each task just blocks on network I/O, which is exactly
-  // the case virtual threads are designed for.
   private final ExecutorService downloadExecutor = Executors.newVirtualThreadPerTaskExecutor();
 
   private final AppProperties props;
@@ -38,10 +35,7 @@ public class PhotoStorageService {
     this.props = props;
   }
 
-  /**
-   * Downloads and saves every image attachment on a message, in parallel. Non-image attachments
-   * (e.g. someone accidentally drops a .zip) are silently skipped.
-   */
+
   public void saveAll(String weekId, String authorName, List<Attachment> attachments) {
     List<Attachment> images = attachments.stream().filter(this::isImage).toList();
 
@@ -50,8 +44,7 @@ public class PhotoStorageService {
       return;
     }
 
-    // SequencedCollection (Java 21): .getFirst() reads cleanly as "the
-    // first one" without the classic .get(0) index noise.
+
     Attachment first = images.getFirst();
     log.info(
         "Processing {} image(s) from {} (first: {})",
