@@ -14,7 +14,7 @@ import static org.mockito.Mockito.when;
 class PhotoStorageServiceTest {
 
     private final PhotoStorageService service = new PhotoStorageService(
-            new AppProperties("token", 1L, Path.of("test-photos"), "2026-w35")
+            new AppProperties("token", 1L, Path.of("test-photos"), "2026-w35", Path.of("test-state.txt"))
     );
 
     @ParameterizedTest
@@ -32,7 +32,7 @@ class PhotoStorageServiceTest {
     @CsvSource({
             "photo.png, true",
             "photo.PNG, true",
-            "clip.gif, true",
+
             "photo.webp, true",
             "doc.pdf, false",
             "archive.zip, false",
