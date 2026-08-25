@@ -3,32 +3,30 @@ package com.photobot.discord;
 import com.photobot.config.AppProperties;
 import com.photobot.service.CurrentWeekService;
 import com.photobot.service.PhotoStorageService;
+import com.photobot.service.ProcessedMessageTracker;
 import net.dv8tion.jda.api.entities.Message.Attachment;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.regex.Pattern;
 
 @Component
 public class PhotoListener extends ListenerAdapter {
 
-  // Matches a bracketed/parenthesized tag people append to their display
-  // name, e.g. "Nyek [calhub|ghbgDir]" -> "Nyek". Cuts at the first '['
-  // or '(' and drops everything after it, including the space before it.
-  private static final Pattern TAG_SUFFIX = Pattern.compile("\\s*[\\[(].*$");
-
   private final CurrentWeekService currentWeekService;
   private final PhotoStorageService photoStorageService;
+  private final ProcessedMessageTracker processedMessageTracker;
   private final long contestChannelId;
 
   public PhotoListener(
       CurrentWeekService currentWeekService,
       PhotoStorageService photoStorageService,
+      ProcessedMessageTracker processedMessageTracker,
       AppProperties props) {
     this.currentWeekService = currentWeekService;
     this.photoStorageService = photoStorageService;
+    this.processedMessageTracker = processedMessageTracker;
     this.contestChannelId = props.channelId();
   }
 
@@ -37,6 +35,9 @@ public class PhotoListener extends ListenerAdapter {
     if (event.getChannel().getIdLong() != contestChannelId) {
       return;
     }
+
+    processedMessageTracker.markProcessed(event.getMessageIdLong());
+
     if (event.getAuthor().isBot()) {
       return;
     }
@@ -46,16 +47,9 @@ public class PhotoListener extends ListenerAdapter {
       return;
     }
 
-    String rawName =
-        event.getMember() != null
-            ? event.getMember().getEffectiveName()
-            : event.getAuthor().getName();
-    String author = cleanDisplayName(rawName);
+    String rawName = AuthorNameResolver.resolve(event.getMessage());
+    String author = DisplayNameCleaner.clean(rawName);
 
     photoStorageService.saveAll(currentWeekService.get(), author, attachments);
-  }
-
-  String cleanDisplayName(String rawName) {
-    return TAG_SUFFIX.matcher(rawName).replaceFirst("").trim();
   }
 }
